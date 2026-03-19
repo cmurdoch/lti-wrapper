@@ -1,14 +1,18 @@
-const lti = require(‘ims-lti’);
+const lti = require('ims-lti');
 
-module.exports = async (req, res) => { const key = process.env.LTI_KEY;
-const secret = process.env.LTI_SECRET; const redirectUrl =
-process.env.REDIRECT_URL || ‘https://cmurdoch.github.io/’;
+module.exports = async (req, res) => {
+  // Vercel parses the body automatically for URL-encoded POST
+  const key = process.env.LTI_KEY;
+  const secret = process.env.LTI_SECRET;
+  const redirectUrl = process.env.REDIRECT_URL || 'https://cmurdoch.github.io/';
 
-const provider = new lti.Provider(key, secret);
+  const provider = new lti.Provider(key, secret);
 
-provider.valid_request(req, (err, isValid) => { if (err || !isValid) {
-console.error(‘LTI validation failed:’, err); return
-res.status(401).send(‘Invalid LTI launch request.’); }
+  provider.valid_request(req, (err, isValid) => {
+    if (err || !isValid) {
+      console.error('LTI validation failed:', err);
+      return res.status(401).send('Invalid LTI launch request.');
+    }
 
     // Log some info for your testing
     console.log('Valid LTI launch!');
@@ -19,5 +23,5 @@ res.status(401).send(‘Invalid LTI launch request.’); }
     // Redirect to your GitHub Pages site
     res.writeHead(303, { Location: redirectUrl });
     res.end();
-
-}); };
+  });
+};
