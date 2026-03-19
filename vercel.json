@@ -1,2 +1,9 @@
-{ “routes”: [ { “src”: “/launch”, “methods”: [“POST”], “dest”:
-“/api/launch” } ] }
+{
+  “routes”: [
+    {
+      “src”: “/launch”,
+      “methods”: [“POST”],
+      “dest”: “/api/launch”
+    }
+  ]
+}
