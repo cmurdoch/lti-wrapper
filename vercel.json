@@ -1,9 +1,8 @@
 {
-  “routes”: [
+  "rewrites": [
     {
-      “src”: “/launch”,
-      “methods”: [“POST”],
-      “dest”: “/api/launch”
+      "source": "/launch",
+      "destination": "/api/launch"
     }
   ]
 }
