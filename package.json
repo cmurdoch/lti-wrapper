@@ -1,0 +1,7 @@
+{
+  "name": "lti-wrapper",
+  "version": "1.0.0",
+  "dependencies": {
+    "ims-lti": "^3.0.2"
+  }
+}
