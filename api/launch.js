@@ -5,22 +5,18 @@ module.exports = async (req, res) => {
   const secret = process.env.LTI_SECRET;
   const redirectUrl = process.env.REDIRECT_URL || 'https://cmurdoch.github.io/';
 
-  // Debug logging
-  console.log('--- LTI Launch Attempt ---');
-  console.log('Method:', req.method);
-  console.log('Content-Type:', req.headers['content-type']);
-  console.log('LTI_KEY env var set:', !!key);
-  console.log('LTI_SECRET env var set:', !!secret);
-  console.log('oauth_consumer_key from POST:', req.body?.oauth_consumer_key);
-  console.log('Keys match:', key === req.body?.oauth_consumer_key);
-  console.log('All POST params:', JSON.stringify(req.body, null, 2));
+  // Fix for reverse proxy (Vercel terminates SSL, so the function
+  // sees http:// internally, but Canvas signed with https://)
+  req.protocol = req.headers['x-forwarded-proto'] || 'https';
+  
+  // Also ensure the host header is correct
+  req.headers.host = req.headers['x-forwarded-host'] || req.headers.host;
 
   const provider = new lti.Provider(key, secret);
 
   provider.valid_request(req, (err, isValid) => {
     if (err || !isValid) {
       console.error('Validation failed. Error:', err?.message || err);
-      console.error('isValid:', isValid);
       return res.status(401).send('Invalid LTI launch request.');
     }
 
